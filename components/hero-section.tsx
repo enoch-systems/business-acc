@@ -9,6 +9,8 @@ import { TextEffect } from '@/components/ui/text-effect'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { Carousel } from '@/components/ui/carousel'
 import { HeroHeader } from './header'
+import { Featured } from './featured'
+import { Footer } from './footer'
 
 const carouselImages = [
     {
@@ -120,7 +122,7 @@ export default function HeroSection() {
                         <div className="mx-auto max-w-7xl px-6">
                             <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
                                 <AnimatedGroup variants={transitionVariants}>
-                                    <div className="hover:bg-background dark:hover:border-t-border bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950">
+                                    <div className="hover:bg-background dark:hover:border-t-border bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-2 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950">
                                     <input
                                         type="text"
                                         placeholder="Search products...."
@@ -141,7 +143,13 @@ export default function HeroSection() {
                         </div>
                     </div>
                 </section>
+                
+                {/* Featured Products Section */}
+                <Featured />
             </main>
+            
+            {/* Footer Section */}
+            <Footer />
         </>
     )
 }

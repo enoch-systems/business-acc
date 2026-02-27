@@ -60,6 +60,15 @@ export const HeroHeader = () => {
                             </Link>
 
                             <button
+                                aria-label="Shopping Cart"
+                                className="relative z-20 -m-2.5 -mr-37 block cursor-pointer p-2.5 lg:hidden">
+                                <img src="/shopping-bag.png" alt="Shopping Cart" className="size-6 object-contain" />
+                                <span className="absolute top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+                                    3
+                                </span>
+                            </button>
+
+                            <button
                                 onClick={() => setMenuState(!menuState)}
                                 aria-label={menuState == true ? 'Close Menu' : 'Open Menu'}
                                 className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden">
