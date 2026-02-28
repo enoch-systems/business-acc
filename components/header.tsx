@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 const menuItems = [
     { name: 'My Account', href: '/profile', icon: User, customIcon: '/admin.png', hasDropdown: true },
     { name: 'Home', href: '/', icon: HousePlus },
-    { name: 'Shop Wigs', href: '/shop-wigs', icon: ShoppingBag },
+    { name: 'Shop Wigs', href: '/shop', icon: ShoppingBag },
     { name: 'Accessories', href: '/accessories', icon: ScissorsLineDashed },
     { name: 'Check out', href: '/checkout', icon: CreditCard },
     { name: 'Help', href: '/help', icon: HelpCircle },
@@ -61,7 +61,7 @@ export const HeroHeader = () => {
 
                             <button
                                 aria-label="Shopping Cart"
-                                className="relative z-20 -m-2.5 -mr-37 block cursor-pointer p-2.5 lg:hidden">
+                                className="relative z-20 -m-2.5 -mr-20 block cursor-pointer p-2.5 lg:hidden">
                                 <img src="/shopping-bag.png" alt="Shopping Cart" className="size-6 object-contain" />
                                 <span className="absolute top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
                                     3
@@ -146,39 +146,12 @@ export const HeroHeader = () => {
                                                     ) : (
                                                         <item.icon className="size-5 text-amber-100" />
                                                     )}
-                                                    <span className="border-b border-gray-500/20">{item.name}</span>
+                                                    <span className="border-b border-gray-500/20 font-semibold">{item.name}</span>
                                                 </Link>
                                             )}
                                         </li>
                                     ))}
                                 </ul>
-                            </div>
-                            <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    size="sm"
-                                    className={cn(isScrolled && 'lg:hidden', 'hidden')}>
-                                    <Link href="#">
-                                        <span>Login</span>
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled && 'lg:hidden', 'hidden')}>
-                                    <Link href="#">
-                                        <span>Sign Up</span>
-                                    </Link>
-                                </Button>
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
-                                    <Link href="#">
-                                        <span>Go to Shop</span>
-                                    </Link>
-                                </Button>
                             </div>
                         </div>
                     </div>
