@@ -449,6 +449,7 @@ const Shop = () => {
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
     }
 
     const handlePrevious = () => {
@@ -540,6 +541,39 @@ const Shop = () => {
                                         ))}
                                     </select>
                                 </div>
+                            </div>
+                        </AnimatedGroup>
+
+                        {/* Top Pagination */}
+                        <AnimatedGroup variants={transitionVariants}>
+                            <div className="flex justify-center items-center mt-4 mb-7 gap-3">
+                                <button 
+                                    onClick={handlePrevious}
+                                    disabled={currentPage === 1}
+                                    className="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <ArrowLeft className="w-4 h-4" />
+                                </button>
+                                <div className="flex gap-3">
+                                    {getPageNumbers().map((pageNumber) => (
+                                        <button
+                                            key={pageNumber}
+                                            onClick={() => handlePageChange(pageNumber)}
+                                            className={`flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors${
+                                                pageNumber === currentPage
+                                                    ? 'text-amber-900 bg-amber-50 border border-amber-900 hover:bg-amber-100'
+                                                    : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700'
+                                            }`}
+                                        >
+                                            {pageNumber}
+                                        </button>
+                                    ))}
+                                </div>
+                                <button 
+                                    onClick={handleNext}
+                                    disabled={currentPage === totalPages}
+                                    className="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <ArrowRight className="w-4 h-4" />
+                                </button>
                             </div>
                         </AnimatedGroup>
 
