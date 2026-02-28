@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
-import { Menu, X, Home, ShoppingBag, Package, ShoppingCart, HelpCircle, User, Store, Settings, LogOut, ChevronDown, CreditCard, Brush, HousePlus, ScissorsLineDashed } from 'lucide-react'
+import { Menu, X, Home, ShoppingBag, Package, ShoppingCart, HelpCircle, User, Store, Settings, LogOut, ChevronDown, CreditCard, Brush, HousePlus, ScissorsLineDashed, ChevronUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { cn } from '@/lib/utils'
@@ -108,23 +108,27 @@ export const HeroHeader = () => {
                                                             <item.icon className="size-5" />
                                                         )}
                                                         <span className="text-amber-100">{item.name}</span>
-                                                        <ChevronDown className="size-4 text-amber-100" />
+                                                        {profileDropdownOpen ? (
+                                                            <ChevronUp className="size-4 text-amber-100 transition-transform duration-200" />
+                                                        ) : (
+                                                            <ChevronDown className="size-4 text-amber-100 transition-transform duration-200" />
+                                                        )}
                                                     </button>
                                                     {profileDropdownOpen && (
-                                                        <div className="ml-auto mt-2 space-y-2 bg-white rounded-lg shadow-lg p-4 border w-48">
+                                                        <div className="ml-auto mt-2 space-y-2 bg-amber-900/90 rounded-lg shadow-lg p-4 border border-amber-700/50 w-48">
                                                             {profileDropdownItems.map((dropdownItem, dropdownIndex) => (
                                                                 <div key={dropdownIndex}>
                                                                     {dropdownItem.isHeader ? (
-                                                                        <div className="pb-2 border-b border-amber-900 mb-2">
-                                                                            <div className="font-semibold">{dropdownItem.name}</div>
-                                                                            <div className="text-sm text-gray-500">{dropdownItem.email}</div>
+                                                                        <div className="pb-2 border-b border-amber-700/50 mb-2">
+                                                                            <div className="font-semibold text-amber-100">{dropdownItem.name}</div>
+                                                                            <div className="text-sm text-amber-200">{dropdownItem.email}</div>
                                                                         </div>
                                                                     ) : dropdownItem.href ? (
                                                                         <Link
                                                                             href={dropdownItem.href}
-                                                                            className={`flex items-center gap-3 py-2 px-3 rounded hover:bg-gray-100 ${dropdownItem.isSignOut ? 'text-red-500' : 'text-gray-700'}`}
+                                                                            className={`flex items-center gap-3 py-2 px-3 rounded hover:bg-amber-800/50 ${dropdownItem.isSignOut ? 'text-red-400' : 'text-amber-100'}`}
                                                                         >
-                                                                            <dropdownItem.icon className="size-4" />
+                                                                            <dropdownItem.icon className="size-4 text-amber-200" />
                                                                             <span>{dropdownItem.name}</span>
                                                                         </Link>
                                                                     ) : null}
