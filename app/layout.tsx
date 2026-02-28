@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/components/cart-context";
+import { UIProvider } from "@/contexts/ui-context";
+import FloatingWhatsApp from "@/components/floating-whatsapp";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,9 +34,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <CartProvider>
-          {children}
-        </CartProvider>
+        <UIProvider>
+          <CartProvider>
+            {children}
+            <FloatingWhatsApp />
+          </CartProvider>
+        </UIProvider>
       </body>
     </html>
   );

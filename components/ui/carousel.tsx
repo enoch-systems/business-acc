@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
 interface CarouselProps {
@@ -17,18 +18,12 @@ interface CarouselProps {
 export const Carousel = ({ images, className }: CarouselProps) => {
     const [currentIndex, setCurrentIndex] = useState(0)
 
-    // Create groups of 3 images for desktop display
-    const desktopImageGroups = []
-    for (let i = 0; i < images.length; i += 3) {
-        desktopImageGroups.push(images.slice(i, i + 3))
-    }
-
     const nextSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % desktopImageGroups.length)
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
     }
 
     const prevSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + desktopImageGroups.length) % desktopImageGroups.length)
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
     }
 
     const goToSlide = (index: number) => {
@@ -72,9 +67,11 @@ export const Carousel = ({ images, className }: CarouselProps) => {
                                         {image.description}
                                     </p>
                                     <div className="flex gap-3 justify-center">
-                                        <button className="border border-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition-colors">
-                                            Shop Wigs
-                                        </button>
+                                        <Link href="/shop">
+                                            <button className="border border-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition-colors">
+                                                Shop Wigs
+                                            </button>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
@@ -84,38 +81,45 @@ export const Carousel = ({ images, className }: CarouselProps) => {
 
                 {/* Desktop view - 3 images horizontally */}
                 <div className="hidden lg:block">
-                    {desktopImageGroups.map((imageGroup, groupIndex) => (
+                    {images.map((image, index) => (
                         <div
-                            key={groupIndex}
+                            key={index}
                             className={cn(
                                 'absolute inset-0 transition-opacity duration-1000 ease-in-out',
-                                groupIndex === currentIndex ? 'opacity-100' : 'opacity-0'
+                                index === currentIndex ? 'opacity-100' : 'opacity-0'
                             )}
                         >
                             <div className="flex h-full gap-4 px-8">
-                                {imageGroup.map((image, imageIndex) => (
-                                    <div key={imageIndex} className="flex-1 relative">
-                                        <img
-                                            src={image.src}
-                                            alt={image.alt}
-                                            className="w-full h-full object-contain"
-                                        />
-                                    </div>
-                                ))}
+                                {/* Show current image + next 2 images (wrap around if needed) */}
+                                {[0, 1, 2].map((offset) => {
+                                    const imageIndex = (index + offset) % images.length
+                                    const displayImage = images[imageIndex]
+                                    return (
+                                        <div key={imageIndex} className="flex-1 relative">
+                                            <img
+                                                src={displayImage.src}
+                                                alt={displayImage.alt}
+                                                className="w-full h-full object-contain"
+                                            />
+                                        </div>
+                                    )
+                                })}
                             </div>
                             {/* Overlay content - centered over the middle */}
                             <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
                                 <div className="text-center text-white px-6 max-w-4xl">
                                     <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
-                                        {imageGroup[1]?.title || 'Wig Collection'}
+                                        {image.title}
                                     </h1>
                                     <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-                                        {imageGroup[1]?.description || 'Discover our premium wig collection'}
+                                        {image.description}
                                     </p>
                                     <div className="flex gap-3 justify-center">
-                                        <button className="border border-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition-colors">
-                                            Shop Wigs
-                                        </button>
+                                        <Link href="/shop">
+                                            <button className="border border-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition-colors">
+                                                Shop Wigs
+                                            </button>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
@@ -142,7 +146,7 @@ export const Carousel = ({ images, className }: CarouselProps) => {
 
             {/* Pagination dots */}
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                {desktopImageGroups.map((_, index) => (
+                {images.map((_, index) => (
                     <button
                         key={index}
                         onClick={() => goToSlide(index)}

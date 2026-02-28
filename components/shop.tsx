@@ -1,374 +1,14 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { Star, Heart, ShoppingCart, ArrowLeft, ArrowRight, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { HeroHeader } from './header'
 import Footer from '@/components/footer'
 import { useCart } from './cart-context'
-
-const featuredProducts = [
-    {
-        id: 1,
-        name: 'Classic Bob Cut',
-        price: '₦45,000',
-        originalPrice: '₦65,000',
-        rating: 4.5,
-        reviews: 128,
-        image: '/wig1.jpeg',
-        badge: 'Best Seller'
-    },
-    {
-        id: 2,
-        name: 'Long Wavy Style',
-        price: '₦55,000',
-        originalPrice: '₦75,000',
-        rating: 4.8,
-        reviews: 89,
-        image: '/wig2.jpeg',
-        badge: 'New Arrival'
-    },
-    {
-        id: 3,
-        name: 'Curly Afro Wig',
-        price: '₦38,000',
-        originalPrice: '₦58,000',
-        rating: 4.3,
-        reviews: 156,
-        image: '/wig3.jpeg',
-        badge: 'Hot Deal'
-    },
-    {
-        id: 4,
-        name: 'Straight Blonde',
-        price: '₦62,000',
-        originalPrice: '₦85,000',
-        rating: 4.7,
-        reviews: 203,
-        image: '/wig4.jpeg',
-        badge: 'Premium'
-    },
-    {
-        id: 5,
-        name: 'Brown Layered Cut',
-        price: '₦48,000',
-        originalPrice: '₦68,000',
-        rating: 4.6,
-        reviews: 92,
-        image: '/wig5.jpeg',
-        badge: 'Trending'
-    },
-    {
-        id: 6,
-        name: 'Short Pixie Style',
-        price: '₦35,000',
-        originalPrice: '₦52,000',
-        rating: 4.4,
-        reviews: 67,
-        image: '/wig6.jpeg',
-        badge: 'Sale'
-    },
-    {
-        id: 7,
-        name: 'Black Long Straight',
-        price: '₦58,000',
-        originalPrice: '₦82,000',
-        rating: 4.9,
-        reviews: 234,
-        image: '/wig7.jpeg',
-        badge: 'Popular'
-    },
-    {
-        id: 8,
-        name: 'Auburn Curls',
-        price: '₦42,000',
-        originalPrice: '₦65,000',
-        rating: 4.2,
-        reviews: 145,
-        image: '/wig8.jpeg',
-        badge: 'Limited'
-    },
-    {
-        id: 9,
-        name: 'Platinum Blonde',
-        price: '₦68,000',
-        originalPrice: '₦95,000',
-        rating: 4.8,
-        reviews: 178,
-        image: '/wig9.jpeg',
-        badge: 'Luxury'
-    },
-    {
-        id: 10,
-        name: 'Dark Brown Waves',
-        price: '₦52,000',
-        originalPrice: '₦75,000',
-        rating: 4.5,
-        reviews: 112,
-        image: '/wig10.jpeg',
-        badge: 'Classic'
-    },
-    {
-        id: 11,
-        name: 'Red Velvet Style',
-        price: '₦71,000',
-        originalPrice: '₦98,000',
-        rating: 4.6,
-        reviews: 95,
-        image: '/wig11.jpeg',
-        badge: 'Exclusive'
-    },
-    {
-        id: 12,
-        name: 'Natural Brown Bob',
-        price: '₦39,000',
-        originalPrice: '₦59,000',
-        rating: 4.7,
-        reviews: 187,
-        image: '/wig12.jpeg',
-        badge: 'Eco-Friendly'
-    },
-    {
-        id: 13,
-        name: 'Golden Highlights',
-        price: '₦64,000',
-        originalPrice: '₦88,000',
-        rating: 4.4,
-        reviews: 123,
-        image: '/wig13.jpeg',
-        badge: 'Stylish'
-    },
-    {
-        id: 14,
-        name: 'Silver Gray Cut',
-        price: '₦56,000',
-        originalPrice: '₦78,000',
-        rating: 4.8,
-        reviews: 201,
-        image: '/wig14.jpeg',
-        badge: 'Modern'
-    },
-    {
-        id: 15,
-        name: 'Copper Long Waves',
-        price: '₦73,000',
-        originalPrice: '₦99,000',
-        rating: 4.3,
-        reviews: 156,
-        image: '/wig15.jpeg',
-        badge: 'Elegant'
-    },
-    {
-        id: 16,
-        name: 'Jet Black Straight',
-        price: '₦47,000',
-        originalPrice: '₦69,000',
-        rating: 4.9,
-        reviews: 267,
-        image: '/wig16.jpeg',
-        badge: 'Professional'
-    },
-    {
-        id: 17,
-        name: 'Honey Blonde Curls',
-        price: '₦61,000',
-        originalPrice: '₦85,000',
-        rating: 4.5,
-        reviews: 143,
-        image: '/wig17.jpeg',
-        badge: 'Trendy'
-    },
-    {
-        id: 18,
-        name: 'Mahogany Layers',
-        price: '₦54,000',
-        originalPrice: '₦76,000',
-        rating: 4.6,
-        reviews: 189,
-        image: '/wig18.jpeg',
-        badge: 'Sophisticated'
-    },
-    {
-        id: 19,
-        name: 'Plum Purple Style',
-        price: '₦67,000',
-        originalPrice: '₦92,000',
-        rating: 4.7,
-        reviews: 174,
-        image: '/wig19.jpeg',
-        badge: 'Bold'
-    },
-    {
-        id: 20,
-        name: 'Natural Light Brown',
-        price: '₦41,000',
-        originalPrice: '₦63,000',
-        rating: 4.4,
-        reviews: 198,
-        image: '/wig20.jpeg',
-        badge: 'Versatile'
-    },
-    {
-        id: 21,
-        name: 'Rose Gold Waves',
-        price: '₦59,000',
-        originalPrice: '₦83,000',
-        rating: 4.8,
-        reviews: 225,
-        image: '/wig21.jpeg',
-        badge: 'Chic'
-    },
-    {
-        id: 22,
-        name: 'Sandy Blonde Bob',
-        price: '₦44,000',
-        originalPrice: '₦66,000',
-        rating: 4.3,
-        reviews: 167,
-        image: '/wig22.jpeg',
-        badge: 'Casual'
-    },
-    {
-        id: 23,
-        name: 'Chocolate Curls',
-        price: '₦49,000',
-        originalPrice: '₦71,000',
-        rating: 4.6,
-        reviews: 212,
-        image: '/wig23.jpeg',
-        badge: 'Rich'
-    },
-    {
-        id: 24,
-        name: 'Pearl White Long',
-        price: '₦76,000',
-        originalPrice: '₦105,000',
-        rating: 4.9,
-        reviews: 289,
-        image: '/wig24.jpeg',
-        badge: 'Pure'
-    },
-    {
-        id: 25,
-        name: 'Bronze Shimmer Cut',
-        price: '₦53,000',
-        originalPrice: '₦77,000',
-        rating: 4.5,
-        reviews: 156,
-        image: '/wig25.jpeg',
-        badge: 'Glamorous'
-    },
-    {
-        id: 26,
-        name: 'Ivory Cream Style',
-        price: '₦65,000',
-        originalPrice: '₦89,000',
-        rating: 4.7,
-        reviews: 194,
-        image: '/wig26.jpeg',
-        badge: 'Soft'
-    },
-    {
-        id: 27,
-        name: 'Charcoal Black Layers',
-        price: '₦57,000',
-        originalPrice: '₦81,000',
-        rating: 4.8,
-        reviews: 238,
-        image: '/wig27.jpeg',
-        badge: 'Dramatic'
-    },
-    {
-        id: 28,
-        name: 'Peach Pink Waves',
-        price: '₦70,000',
-        originalPrice: '₦96,000',
-        rating: 4.4,
-        reviews: 178,
-        image: '/wig28.jpeg',
-        badge: 'Playful'
-    },
-    {
-        id: 29,
-        name: 'Slate Gray Bob',
-        price: '₦46,000',
-        originalPrice: '₦68,000',
-        rating: 4.6,
-        reviews: 201,
-        image: '/wig29.jpeg',
-        badge: 'Urban'
-    },
-    {
-        id: 30,
-        name: 'Midnight Blue Curls',
-        price: '₦63,000',
-        originalPrice: '₦87,000',
-        rating: 4.9,
-        reviews: 245,
-        image: '/wig30.jpeg',
-        badge: 'Mystical'
-    },
-    {
-        id: 31,
-        name: 'Coral Orange Style',
-        price: '₦72,000',
-        originalPrice: '₦98,000',
-        rating: 4.5,
-        reviews: 187,
-        image: '/wig31.jpeg',
-        badge: 'Vibrant'
-    },
-    {
-        id: 32,
-        name: 'Teal Green Layers',
-        price: '₦58,000',
-        originalPrice: '₦82,000',
-        rating: 4.7,
-        reviews: 223,
-        image: '/wig32.jpeg',
-        badge: 'Fresh'
-    },
-    {
-        id: 33,
-        name: 'Lavender Purple Waves',
-        price: '₦69,000',
-        originalPrice: '₦94,000',
-        rating: 4.3,
-        reviews: 166,
-        image: '/wig33.jpeg',
-        badge: 'Dreamy'
-    },
-    {
-        id: 34,
-        name: 'Mint Green Bob',
-        price: '₦51,000',
-        originalPrice: '₦74,000',
-        rating: 4.8,
-        reviews: 254,
-        image: '/wig34.jpeg',
-        badge: 'Cool'
-    },
-    {
-        id: 35,
-        name: 'Burgundy Red Curls',
-        price: '₦75,000',
-        originalPrice: '₦102,000',
-        rating: 4.6,
-        reviews: 198,
-        image: '/wig35.jpeg',
-        badge: 'Passionate'
-    },
-    {
-        id: 36,
-        name: 'Pearlescent White Long',
-        price: '₦82,000',
-        originalPrice: '₦115,000',
-        rating: 4.9,
-        reviews: 312,
-        image: '/wig36.jpeg',
-        badge: 'Ultimate'
-    }
-]
+import { useUI } from '@/contexts/ui-context'
+import { getAllProducts, Product } from '@/lib/products'
 
 const StarRating = ({ rating }: { rating: number }) => {
     return (
@@ -410,12 +50,102 @@ const transitionVariants = {
 }
 
 const Shop = () => {
-    const [selectedSort, setSelectedSort] = useState('Featured')
+    const { addToCart } = useCart()
+    const { profileDropdownOpen, mobileMenuOpen } = useUI()
+    const [products, setProducts] = useState<Product[]>([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState<string | null>(null)
+    const [selectedSort, setSelectedSort] = useState('Default')
     const [selectedCategory, setSelectedCategory] = useState('All')
     const [currentPage, setCurrentPage] = useState(1)
     const [addedToCart, setAddedToCart] = useState<Set<number>>(new Set())
-    const { addToCart } = useCart()
-    const handleAddToCart = (product: typeof featuredProducts[0]) => {
+    const [searchQuery, setSearchQuery] = useState('')
+
+    // reference and positioning for the dropdown so we can render it
+    // fixed on the page and above all other elements
+    const searchWrapperRef = useRef<HTMLDivElement>(null)
+    const [resultsStyle, setResultsStyle] = useState<{top: number; left: number; width: number} | null>(null)
+
+    // Load products on component mount
+    useEffect(() => {
+        const loadProducts = async () => {
+            try {
+                setLoading(true)
+                setError(null)
+                const productData = await getAllProducts()
+                setProducts(productData)
+            } catch (err) {
+                setError(err instanceof Error ? err.message : 'Failed to load products')
+            } finally {
+                setLoading(false)
+            }
+        }
+
+        loadProducts()
+    }, [])
+
+    // update stored settings on mount
+    useEffect(() => {
+        const savedSort = localStorage.getItem('selectedSort')
+        if (savedSort) setSelectedSort(savedSort)
+        const savedCat = localStorage.getItem('selectedCategory')
+        if (savedCat) setSelectedCategory(savedCat)
+    }, [])
+    
+    useEffect(() => {
+        localStorage.setItem('selectedSort', selectedSort)
+    }, [selectedSort])
+    
+    useEffect(() => {
+        localStorage.setItem('selectedCategory', selectedCategory)
+    }, [selectedCategory])
+
+    // compute dropdown position whenever query changes or resize occurs
+    useEffect(() => {
+        if (!searchWrapperRef.current) return
+        const rect = searchWrapperRef.current.getBoundingClientRect()
+        setResultsStyle({
+            top: rect.bottom + window.scrollY,
+            left: rect.left + rect.width / 2 + window.scrollX,
+            width: rect.width,
+        })
+    }, [searchQuery])
+
+    // reposition on window resize as well
+    useEffect(() => {
+        const handler = () => {
+            if (!searchWrapperRef.current) return
+            const rect = searchWrapperRef.current.getBoundingClientRect()
+            setResultsStyle({
+                top: rect.bottom + window.scrollY,
+                left: rect.left + rect.width / 2 + window.scrollX,
+                width: rect.width,
+            })
+        }
+        window.addEventListener('resize', handler)
+        return () => window.removeEventListener('resize', handler)
+    }, [])
+
+    const productsPerPage = 10
+    const sortOptions = ['Default', 'Price: Low to High', 'Price: High to Low']
+    const categories = ['All', 'Lace', 'Human Hair', 'Curly', 'Straight', 'Colored']
+
+    // Calculate pagination
+    const indexOfLastProduct = currentPage * productsPerPage
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct)
+    const filteredProducts = products.filter(product => product.name.toLowerCase().startsWith(searchQuery.toLowerCase()))
+    const displayedProducts = searchQuery ? filteredProducts : currentProducts
+    const totalPages = Math.ceil(products.length / productsPerPage)
+
+    const handlePrevious = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+    }
+    
+    const handleAddToCart = (product: Product) => {
         addToCart({
             id: product.id,
             name: product.name,
@@ -437,27 +167,6 @@ const Shop = () => {
             })
         }, 1000)
     }
-    const productsPerPage = 10
-    const sortOptions = ['Featured', 'Price: Low to High', 'Price: High to Low']
-    const categories = ['All', 'Lace', 'Human Hair', 'Curly', 'Straight', 'Colored']
-
-    // Calculate pagination
-    const indexOfLastProduct = currentPage * productsPerPage
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage
-    const currentProducts = featuredProducts.slice(indexOfFirstProduct, indexOfLastProduct)
-    const totalPages = Math.ceil(featuredProducts.length / productsPerPage)
-
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page)
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-
-    const handlePrevious = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1)
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-        }
-    }
 
     const handleNext = () => {
         if (currentPage < totalPages) {
@@ -466,31 +175,104 @@ const Shop = () => {
         }
     }
 
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page)
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+        }, 100)
+    }
+
     // Generate page numbers for pagination
     const getPageNumbers = () => {
         const pages: number[] = []
-        const maxVisiblePages = 5
+        const maxVisiblePages = 4
         
         if (totalPages <= maxVisiblePages) {
             for (let i = 1; i <= totalPages; i++) {
                 pages.push(i)
             }
         } else {
-            if (currentPage <= 3) {
+            if (currentPage <= 2) {
                 for (let i = 1; i <= maxVisiblePages; i++) {
                     pages.push(i)
                 }
-            } else if (currentPage >= totalPages - 2) {
+            } else if (currentPage >= totalPages - 1) {
                 for (let i = totalPages - maxVisiblePages + 1; i <= totalPages; i++) {
                     pages.push(i)
                 }
             } else {
-                for (let i = currentPage - 2; i <= currentPage + 2; i++) {
+                for (let i = currentPage - 1; i <= currentPage + 2; i++) {
                     pages.push(i)
                 }
             }
         }
         return pages
+    }
+
+    if (loading) {
+        return (
+            <>
+                <HeroHeader />
+                <main className="overflow-hidden">
+                    <section className="py-8 mt-16 px-4 sm:px-6 lg:px-8 bg-white">
+                        <div className="max-w-7xl mx-auto">
+                            {/* Header */}
+                            <AnimatedGroup variants={transitionVariants}>
+                                <div className="text-left mb-8">
+                                    <h2 className="text-xl sm:text-2xl md:text-3xl font-normal text-gray-700 mb-2">
+                                        Shop 
+                                    </h2>
+                                </div>
+                            </AnimatedGroup>
+
+                            <div className="flex items-center justify-center min-h-[400px]">
+                                <div className="text-center">
+                                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-900 mx-auto mb-4"></div>
+                                    <p className="text-gray-600">Loading products...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <Footer />
+                </main>
+            </>
+        )
+    }
+
+    if (error) {
+        return (
+            <>
+                <HeroHeader />
+                <main className="overflow-hidden">
+                    <section className="py-8 mt-16 px-4 sm:px-6 lg:px-8 bg-white">
+                        <div className="max-w-7xl mx-auto">
+                            {/* Header */}
+                            <AnimatedGroup variants={transitionVariants}>
+                                <div className="text-left mb-8">
+                                    <h2 className="text-xl sm:text-2xl md:text-3xl font-normal text-gray-700 mb-2">
+                                        Shop 
+                                    </h2>
+                                </div>
+                            </AnimatedGroup>
+
+                            <div className="flex items-center justify-center min-h-[400px]">
+                                <div className="text-center">
+                                    <div className="text-red-500 mb-4">Error loading products</div>
+                                    <p className="text-gray-600 mb-4">{error}</p>
+                                    <Button 
+                                        onClick={() => window.location.reload()}
+                                        className="bg-amber-900 text-white hover:bg-amber-800"
+                                    >
+                                        Try Again
+                                    </Button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <Footer />
+                </main>
+            </>
+        )
     }
 
     return (
@@ -509,21 +291,56 @@ const Shop = () => {
                         </AnimatedGroup>
 
                         {/* Search Bar */}
-                        <AnimatedGroup variants={transitionVariants}>
-                            <div className="text-center mb-6">
-                                <div className="hover:bg-background bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-2 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300">
-                                    <input
-                                        type="text"
-                                        placeholder="Search products...."
-                                        className="text-foreground text-sm bg-transparent outline-none w-64 placeholder:text-muted-foreground"
-                                    />
-                                    <span className="block h-4 w-0.5 border-l bg-white"></span>
-                                    <div className="bg-background group-hover:bg-muted size-6 overflow-hidden rounded-full duration-500 flex items-center justify-center">
-                                        <Search className="m-auto size-3" />
+                        <AnimatedGroup variants={transitionVariants} className="relative z-[10000]">
+                            <div ref={searchWrapperRef} className="relative text-center mb-6">
+                                {!profileDropdownOpen && !mobileMenuOpen && (
+                                    <div className="hover:bg-background bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-2 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300">
+                                        <input
+                                            type="text"
+                                            placeholder="Search products...."
+                                            className="text-foreground text-sm bg-transparent outline-none w-64 placeholder:text-muted-foreground"
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                        />
+                                        <span className="block h-4 w-0.5 border-l bg-white"></span>
+                                        <div className="bg-background group-hover:bg-muted size-6 overflow-hidden rounded-full duration-500 flex items-center justify-center">
+                                            <Search className="m-auto size-3" />
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         </AnimatedGroup>
+                        
+                        {/* portal-style fixed results so they sit above everything */}
+                        {searchQuery && filteredProducts.length > 0 && resultsStyle && (
+                            <>
+                                {/* backdrop blur layer */}
+                                <div
+                                    className="fixed inset-0 bg-white/25 backdrop-blur-sm z-[9998]"
+                                    onClick={() => setSearchQuery('')}
+                                />
+
+                                <div
+                                    className="fixed bg-white border border-gray-300 rounded-lg shadow-lg max-h-64 overflow-y-auto z-[9999]"
+                                    style={{
+                                        top: resultsStyle.top + 8,
+                                        left: resultsStyle.left,
+                                        transform: 'translateX(-50%)',
+                                        width: resultsStyle.width
+                                    }}
+                                >
+                                    {filteredProducts.slice(0, 10).map(product => (
+                                        <div key={product.id} className="flex items-center p-2 hover:bg-gray-100 cursor-pointer">
+                                            <img src={product.image} alt={product.name} className="w-10 h-10 object-cover rounded mr-3" />
+                                            <div>
+                                                <p className="text-sm font-semibold">{product.name}</p>
+                                                <p className="text-xs text-gray-500">{product.price}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </>
+                        )}
 
                         {/* Filters */}
                         <AnimatedGroup variants={transitionVariants}>
@@ -554,7 +371,7 @@ const Shop = () => {
                                             onClick={() => setSelectedCategory(category)}
                                             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors${
                                                 selectedCategory === category
-                                                    ? 'bg-amber-700 text-white bg-amber-700 border border-gray-400'
+                                                    ? 'bg-amber-700 text-yellow-600'
                                                     : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
                                             }`}
                                         >
@@ -582,6 +399,7 @@ const Shop = () => {
                         </AnimatedGroup>
 
                         {/* Top Pagination */}
+                        {!searchQuery && (
                         <AnimatedGroup variants={transitionVariants}>
                             <div className="flex justify-center items-center mt-4 mb-7 gap-3">
                                 <button 
@@ -598,7 +416,7 @@ const Shop = () => {
                                             className={`flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors rounded-full
                                              ${
                                                 pageNumber === currentPage
-                                                    ? 'text-amber-900 bg-amber-50 border border-amber-900 hover:bg-amber-100'
+                                                    ? 'text-amber-900 bg-amber-50 hover:bg-amber-100'
                                                     : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700'
                                             }`}
                                         >
@@ -614,12 +432,14 @@ const Shop = () => {
                                 </button>
                             </div>
                         </AnimatedGroup>
+                        )}
 
                         {/* Products Grid - Same as featured: 2 cols on mobile, 3 on tablet, 4 on desktop */}
                         <AnimatedGroup variants={transitionVariants}>
                             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-                                {currentProducts.map((product) => (
-                                    <div key={product.id} className="bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
+                                {displayedProducts.map((product) => (
+                                    <Link key={product.id} href={`/shop/${product.id}`} className="block">
+                                        <div className="bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300 cursor-pointer">
                                         {/* Product Image */}
                                         <div className="relative overflow-hidden rounded-t-lg">
                                             <img
@@ -667,17 +487,22 @@ const Shop = () => {
                                                         ? 'bg-green-500 text-white hover:bg-green-600'
                                                         : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300'
                                                 }`}
-                                                onClick={() => handleAddToCart(product)}
+                                                onClick={(e) => {
+                                                    e.preventDefault()
+                                                    handleAddToCart(product)
+                                                }}
                                             >
                                                 {addedToCart.has(product.id) ? 'Added!' : 'Add to Cart'}
                                             </Button>
                                         </div>
                                     </div>
+                                    </Link>
                                 ))}
                             </div>
                         </AnimatedGroup>
 
                         {/* Pagination */}
+                        {!searchQuery && (
                         <AnimatedGroup variants={transitionVariants}>
                             <div className="flex justify-center items-center mt-8 gap-3">
                                 <button 
@@ -693,7 +518,7 @@ const Shop = () => {
                                             onClick={() => handlePageChange(pageNumber)}
                                             className={`flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors rounded-full ${
                                                 pageNumber === currentPage
-                                                    ? 'text-amber-900 bg-amber-50 border border-amber-900 hover:bg-amber-100'
+                                                    ? 'text-amber-900 bg-amber-50 hover:bg-amber-100'
                                                     : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700'
                                             }`}
                                         >
@@ -709,6 +534,7 @@ const Shop = () => {
                                 </button>
                             </div>
                         </AnimatedGroup>
+                        )}
                     </div>
                 </section>
 

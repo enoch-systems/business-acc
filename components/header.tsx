@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import React from 'react'
 import { cn } from '@/lib/utils'
 import { useCart } from './cart-context'
+import { useUI } from '@/contexts/ui-context'
 
 const mobileMenuItems = [
     { name: 'My Account', href: '/profile', icon: User, customIcon: '/admin.png', hasDropdown: true },
@@ -34,10 +35,45 @@ const profileDropdownItems = [
 ]
 
 export const HeroHeader = () => {
-    const [menuState, setMenuState] = React.useState(false)
-    const [profileDropdownOpen, setProfileDropdownOpen] = React.useState(false)
+    const { profileDropdownOpen, setProfileDropdownOpen, mobileMenuOpen, setMobileMenuOpen } = useUI()
     const [isScrolled, setIsScrolled] = React.useState(false)
     const { cartCount } = useCart()
+    const dropdownRef = React.useRef<HTMLDivElement>(null)
+    const mobileMenuRef = React.useRef<HTMLDivElement>(null)
+
+    // Close dropdown when clicking outside
+    React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setProfileDropdownOpen(false)
+            }
+        }
+
+        if (profileDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside)
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [profileDropdownOpen, setProfileDropdownOpen])
+
+    // Close mobile menu when clicking outside
+    React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+                setMobileMenuOpen(false)
+            }
+        }
+
+        if (mobileMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside)
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [mobileMenuOpen, setMobileMenuOpen])
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -49,15 +85,15 @@ export const HeroHeader = () => {
     return (
         <header>
             {/* Backdrop overlay */}
-            {menuState && (
+            {mobileMenuOpen && (
                 <div 
                     className="fixed inset-0 bg-white/1 backdrop-blur-sm z-10 lg:hidden"
-                    onClick={() => setMenuState(false)}
+                    onClick={() => setMobileMenuOpen(false)}
                     aria-hidden="true"
                 />
             )}
             <nav
-                data-state={menuState && 'active'}
+                data-state={mobileMenuOpen && 'active'}
                 className="fixed z-20 w-full px-2">
                 <div className={cn('mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12', isScrolled && 'bg-background/50 max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5')}>
                     <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
@@ -81,8 +117,8 @@ export const HeroHeader = () => {
                             </Link>
 
                             <button
-                                onClick={() => setMenuState(!menuState)}
-                                aria-label={menuState == true ? 'Close Menu' : 'Open Menu'}
+                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                aria-label={mobileMenuOpen == true ? 'Close Menu' : 'Open Menu'}
                                 className="relative z-20 -m-2.5 -mr-4 block cursor-pointer p-2.5 lg:hidden">
                                 <Menu className="in-data-[state=active]:rotate-180 in-data-[state=active]:scale-0 in-data-[state=active]:opacity-0 m-auto size-6 duration-200" />
                                 <X className="in-data-[state=active]:rotate-0 in-data-[state=active]:scale-100 in-data-[state=active]:opacity-100 absolute inset-0 m-auto size-6 -rotate-180 scale-0 opacity-0 duration-200" />
@@ -94,7 +130,7 @@ export const HeroHeader = () => {
                                 {desktopMenuItems.map((item, index) => (
                                     <li key={index}>
                                         {item.hasDropdown ? (
-                                            <div className="relative">
+                                            <div className="relative" ref={dropdownRef}>
                                                 <button
                                                     onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                                                     className={`text-black hover:text-black flex items-center gap-2 duration-150 ${item.name === 'My Account' ? 'ml-15' : ''}`}>
@@ -159,13 +195,13 @@ export const HeroHeader = () => {
                             </ul>
                         </div>
 
-                        <div className="bg-amber-900/40   in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border-gray-500/20 p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none">
+                        <div ref={mobileMenuRef} className="bg-amber-900/40   in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border-gray-500/20 p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none">
                             <div className="lg:hidden">
                                 <ul className="space-y-4 text-base">
                                     {mobileMenuItems.map((item, index) => (
                                         <li key={index}>
                                             {item.hasDropdown ? (
-                                                <div>
+                                                <div ref={dropdownRef}>
                                                     <button
                                                         onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                                                         className="text-black hover:text-black flex items-center gap-3 duration-150 pb-2 border-b border-amber-100 w-full justify-end">
@@ -193,6 +229,7 @@ export const HeroHeader = () => {
                                                                     ) : dropdownItem.href ? (
                                                                         <Link
                                                                             href={dropdownItem.href}
+                                                                            onClick={() => setMobileMenuOpen(false)}
                                                                             className={`flex items-center gap-3 py-2 px-3 rounded hover:bg-amber-800/50 ${dropdownItem.isSignOut ? 'text-red-400' : 'text-amber-100'}`}
                                                                         >
                                                                             <dropdownItem.icon className="size-4 text-amber-200" />
@@ -207,6 +244,7 @@ export const HeroHeader = () => {
                                             ) : (
                                                 <Link
                                                     href={item.href}
+                                                    onClick={() => setMobileMenuOpen(false)}
                                                     className="text-white         hover:text-amber-400 flex     items-center gap-3 duration-150 pb-4 border-b-2 border-amber-900 last:border-0">
                                                     {item.customIcon ? (
                                                         <img src={item.customIcon} alt={item.name} className="size-5 object-contain" />

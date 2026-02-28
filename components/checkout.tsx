@@ -11,6 +11,7 @@ import { useCart } from './cart-context'
 const Checkout = () => {
     const [selectedPayment, setSelectedPayment] = useState('card')
     const [showClearModal, setShowClearModal] = useState(false)
+    const [showEmptyCartModal, setShowEmptyCartModal] = useState(false)
     const { cartItems, updateQuantity, removeFromCart, clearCart: clearCartFromContext, cartCount } = useCart()
 
     const clearCart = () => {
@@ -24,6 +25,17 @@ const Checkout = () => {
 
     const cancelClearCart = () => {
         setShowClearModal(false)
+    }
+
+    const handlePlaceOrder = () => {
+        if (cartItems.length === 0) {
+            setShowEmptyCartModal(true)
+            // Auto-hide after 0.5 seconds
+            setTimeout(() => {
+                setShowEmptyCartModal(false)
+            }, 500)
+        }
+        // Add actual order processing logic here when cart is not empty
     }
 
     const getItemTotal = (price: string, quantity: number) => {
@@ -292,7 +304,10 @@ const Checkout = () => {
                                     </div>
                                     
                                     <div className="space-y-3">
-                                        <Button className="w-full bg-amber-900 text-white hover:bg-amber-800 py-3">
+                                        <Button 
+                                            onClick={handlePlaceOrder}
+                                            className="w-full bg-amber-900 text-white hover:bg-amber-800 py-3"
+                                        >
                                             Place Order
                                         </Button>
                                         
@@ -340,6 +355,18 @@ const Checkout = () => {
                                     Yes
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {/* Empty Cart Warning Message */}
+            {showEmptyCartModal && (
+                <>
+                    <div className="fixed inset-0 bg-white bg-opacity-75 backdrop-blur-sm z-40"></div>
+                    <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
+                        <div className="text-amber-800 text-2xl font-semibold animate-pulse">
+                            Cart is empty!
                         </div>
                     </div>
                 </>
