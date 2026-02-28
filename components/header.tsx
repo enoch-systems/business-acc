@@ -7,13 +7,22 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 import { useCart } from './cart-context'
 
-const menuItems = [
+const mobileMenuItems = [
     { name: 'My Account', href: '/profile', icon: User, customIcon: '/admin.png', hasDropdown: true },
     { name: 'Home', href: '/', icon: HousePlus },
     { name: 'Shop Wigs', href: '/shop', icon: ShoppingBag },
     { name: 'Accessories', href: '/accessories', icon: ScissorsLineDashed },
     { name: 'Check out', href: '/checkout', icon: CreditCard },
     { name: 'Help', href: '/help', icon: HelpCircle },
+]
+
+const desktopMenuItems = [
+    { name: 'Home', href: '/', icon: HousePlus },
+    { name: 'Shop Wigs', href: '/shop', icon: ShoppingBag },
+    { name: 'Accessories', href: '/accessories', icon: ScissorsLineDashed },
+    { name: 'Check out', href: '/checkout', icon: CreditCard },
+    { name: 'Shopping Bag', href: '/checkout', icon: ShoppingCart, customIcon: '/shopping-bag.png' },
+    { name: 'My Account', href: '/profile', icon: User, customIcon: '/admin.png', hasDropdown: true },
 ]
 
 const profileDropdownItems = [
@@ -82,14 +91,69 @@ export const HeroHeader = () => {
 
                         <div className="absolute inset-0 m-auto hidden size-fit lg:block">
                             <ul className="flex gap-8 text-sm">
-                                {menuItems.map((item, index) => (
+                                {desktopMenuItems.map((item, index) => (
                                     <li key={index}>
-                                        <Link
-                                            href={item.href}
-                                            className="text-black hover:text-black flex items-center gap-2 duration-150">
-                                            <item.icon className="size-4" />
-                                            <span>{item.name}</span>
-                                        </Link>
+                                        {item.hasDropdown ? (
+                                            <div className="relative">
+                                                <button
+                                                    onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                                                    className={`text-black hover:text-black flex items-center gap-2 duration-150 ${item.name === 'My Account' ? 'ml-15' : ''}`}>
+                                                    {item.customIcon ? (
+                                                        <img src={item.customIcon} alt={item.name} className="size-4 object-cover rounded-full border border-gray-300" />
+                                                    ) : (
+                                                        <item.icon className="size-4" />
+                                                    )}
+                                                    <span>{item.name}</span>
+                                                    {profileDropdownOpen ? (
+                                                        <ChevronUp className="size-3 transition-transform duration-200" />
+                                                    ) : (
+                                                        <ChevronDown className="size-3 transition-transform duration-200" />
+                                                    )}
+                                                </button>
+                                                {profileDropdownOpen && (
+                                                    <div className="absolute top-full mt-2 right-0 space-y-2 bg-white rounded-lg shadow-lg p-4 border border-gray-200 w-48 z-50">
+                                                        {profileDropdownItems.map((dropdownItem, dropdownIndex) => (
+                                                            <div key={dropdownIndex}>
+                                                                {dropdownItem.isHeader ? (
+                                                                    <div className="pb-2 border-b border-gray-200 mb-2">
+                                                                        <div className="font-semibold text-gray-800">{dropdownItem.name}</div>
+                                                                        <div className="text-sm text-gray-600">{dropdownItem.email}</div>
+                                                                    </div>
+                                                                ) : dropdownItem.href ? (
+                                                                    <Link
+                                                                        href={dropdownItem.href}
+                                                                        className={`flex items-center gap-3 py-2 px-3 rounded hover:bg-gray-100 ${dropdownItem.isSignOut ? 'text-red-500' : 'text-gray-700'}`}
+                                                                    >
+                                                                        <dropdownItem.icon className="size-4 text-gray-500" />
+                                                                        <span>{dropdownItem.name}</span>
+                                                                    </Link>
+                                                                ) : null}
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <Link
+                                                href={item.href}
+                                                className={`text-black hover:text-black flex items-center gap-2 duration-150 ${item.name === 'My Account' ? 'ml-15' : ''}`}>
+                                                {(['Home', 'Shop Wigs', 'Accessories', 'Check out'].includes(item.name)) ? null : (
+                                                    item.customIcon ? (
+                                                        <div className="relative">
+                                                            <img src={item.customIcon} alt={item.name} className="size-4 object-contain" />
+                                                            {item.name === 'Shopping Bag' && (
+                                                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-semibold">
+                                                                    {cartCount}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    ) : (
+                                                        <item.icon className="size-5" />
+                                                    )
+                                                )}
+                                                {item.name !== 'Shopping Bag' && <span>{item.name}</span>}
+                                            </Link>
+                                        )}
                                     </li>
                                 ))}
                             </ul>
@@ -98,7 +162,7 @@ export const HeroHeader = () => {
                         <div className="bg-amber-900/40   in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border-gray-500/20 p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none">
                             <div className="lg:hidden">
                                 <ul className="space-y-4 text-base">
-                                    {menuItems.map((item, index) => (
+                                    {mobileMenuItems.map((item, index) => (
                                         <li key={index}>
                                             {item.hasDropdown ? (
                                                 <div>

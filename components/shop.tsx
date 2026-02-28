@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react'
-import { Star, Heart, ShoppingCart, ArrowLeft, ArrowRight } from 'lucide-react'
+import { Star, Heart, ShoppingCart, ArrowLeft, ArrowRight, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { HeroHeader } from './header'
@@ -455,12 +455,14 @@ const Shop = () => {
     const handlePrevious = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
         }
     }
 
     const handleNext = () => {
         if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
         }
     }
 
@@ -506,11 +508,46 @@ const Shop = () => {
                             </div>
                         </AnimatedGroup>
 
+                        {/* Search Bar */}
+                        <AnimatedGroup variants={transitionVariants}>
+                            <div className="text-center mb-6">
+                                <div className="hover:bg-background bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-2 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300">
+                                    <input
+                                        type="text"
+                                        placeholder="Search products...."
+                                        className="text-foreground text-sm bg-transparent outline-none w-64 placeholder:text-muted-foreground"
+                                    />
+                                    <span className="block h-4 w-0.5 border-l bg-white"></span>
+                                    <div className="bg-background group-hover:bg-muted size-6 overflow-hidden rounded-full duration-500 flex items-center justify-center">
+                                        <Search className="m-auto size-3" />
+                                    </div>
+                                </div>
+                            </div>
+                        </AnimatedGroup>
+
                         {/* Filters */}
                         <AnimatedGroup variants={transitionVariants}>
                             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 gap-4">
                                 {/* Categories */}
-                                <div className="flex flex-wrap gap-2">
+                                <div className="lg:hidden">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm text-gray-600 whitespace-nowrap">By Type:</span>
+                                        <select
+                                            value={selectedCategory}
+                                            onChange={(e) => setSelectedCategory(e.target.value)}
+                                            className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-900 focus:border-transparent text-gray-500"
+                                        >
+                                            {categories.map((category) => (
+                                                <option key={category} value={category}>
+                                                    {category}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                {/* Desktop Categories */}
+                                <div className="hidden lg:flex flex-wrap gap-2">
                                     {categories.map((category) => (
                                         <button
                                             key={category}
@@ -528,11 +565,11 @@ const Shop = () => {
 
                                 {/* Sort Options */}
                                 <div className="flex items-center gap-2">
-                                    <span className="text-sm text-gray-600">Sort by:</span>
+                                    <span className="text-sm text-gray-600 whitespace-nowrap">By Price:</span>
                                     <select
                                         value={selectedSort}
                                         onChange={(e) => setSelectedSort(e.target.value)}
-                                        className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-900 focus:border-transparent"
+                                        className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-900 focus:border-transparent text-gray-500"
                                     >
                                         {sortOptions.map((option) => (
                                             <option key={option} value={option}>
@@ -550,7 +587,7 @@ const Shop = () => {
                                 <button 
                                     onClick={handlePrevious}
                                     disabled={currentPage === 1}
-                                    className="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    className="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-50 rounded-full hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                     <ArrowLeft className="w-4 h-4" />
                                 </button>
                                 <div className="flex gap-3">
@@ -558,7 +595,8 @@ const Shop = () => {
                                         <button
                                             key={pageNumber}
                                             onClick={() => handlePageChange(pageNumber)}
-                                            className={`flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors${
+                                            className={`flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors rounded-full
+                                             ${
                                                 pageNumber === currentPage
                                                     ? 'text-amber-900 bg-amber-50 border border-amber-900 hover:bg-amber-100'
                                                     : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700'
@@ -571,7 +609,7 @@ const Shop = () => {
                                 <button 
                                     onClick={handleNext}
                                     disabled={currentPage === totalPages}
-                                    className="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    className="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-100 rounded-full hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                     <ArrowRight className="w-4 h-4" />
                                 </button>
                             </div>
@@ -645,7 +683,7 @@ const Shop = () => {
                                 <button 
                                     onClick={handlePrevious}
                                     disabled={currentPage === 1}
-                                    className="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    className="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-50/70 rounded-full hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                     <ArrowLeft className="w-4 h-4" />
                                 </button>
                                 <div className="flex gap-3">
@@ -653,7 +691,7 @@ const Shop = () => {
                                         <button
                                             key={pageNumber}
                                             onClick={() => handlePageChange(pageNumber)}
-                                            className={`flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors${
+                                            className={`flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors rounded-full ${
                                                 pageNumber === currentPage
                                                     ? 'text-amber-900 bg-amber-50 border border-amber-900 hover:bg-amber-100'
                                                     : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700'
@@ -666,7 +704,7 @@ const Shop = () => {
                                 <button 
                                     onClick={handleNext}
                                     disabled={currentPage === totalPages}
-                                    className="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    className="flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-50/70 rounded-full hover:bg-gray-100 hover:text-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                                     <ArrowRight className="w-4 h-4" />
                                 </button>
                             </div>

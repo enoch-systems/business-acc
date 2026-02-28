@@ -258,7 +258,7 @@ export const Featured = () => {
                 <AnimatedGroup variants={transitionVariants}>
                     <div className="text-center mt-12">
                         <Link href="/shop">
-                            <Button variant="outline" className="border-gray-40 text-gray-90 hover:bg-gray-500 hover:text-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base">
+                            <Button variant="outline" className="border-gray-40 text-gray-90 hover:bg-gray-500 hover:text-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base cursor-pointer">
                                 View All Products
                             </Button>
                         </Link>

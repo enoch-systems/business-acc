@@ -17,12 +17,18 @@ interface CarouselProps {
 export const Carousel = ({ images, className }: CarouselProps) => {
     const [currentIndex, setCurrentIndex] = useState(0)
 
+    // Create groups of 3 images for desktop display
+    const desktopImageGroups = []
+    for (let i = 0; i < images.length; i += 3) {
+        desktopImageGroups.push(images.slice(i, i + 3))
+    }
+
     const nextSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % desktopImageGroups.length)
     }
 
     const prevSlide = () => {
-        setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length)
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + desktopImageGroups.length) % desktopImageGroups.length)
     }
 
     const goToSlide = (index: number) => {
@@ -41,38 +47,81 @@ export const Carousel = ({ images, className }: CarouselProps) => {
         <div className={cn('relative w-full mt-4 h-full overflow-hidden', className)}>
             {/* Main carousel container */}
             <div className="relative w-full h-full">
-                {images.map((image, index) => (
-                    <div
-                        key={index}
-                        className={cn(
-                            'absolute inset-0 transition-opacity duration-1000 ease-in-out',
-                            index === currentIndex ? 'opacity-100' : 'opacity-0'
-                        )}
-                    >
-                        <img
-                            src={image.src}
-                            alt={image.alt}
-                            className="w-full h-full object-cover"
-                        />
-                        {/* Overlay content */}
-                        <div className="absolute  inset-0 bg-black/40 flex items-center justify-center">
-                            <div className="text-center text-white px-6 max-w-4xl">
-                                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
-                                    {image.title}
-                                </h1>
-                                <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-                                    {image.description}
-                                </p>
-                                <div className="flex gap-3 justify-center">
-                                   
-                                    <button className="border border-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition-colors">
-                                        Shop Wigs
-                                    </button>
+                {/* Mobile view - single image */}
+                <div className="lg:hidden">
+                    {images.map((image, index) => (
+                        <div
+                            key={index}
+                            className={cn(
+                                'absolute inset-0 transition-opacity duration-1000 ease-in-out',
+                                index === currentIndex ? 'opacity-100' : 'opacity-0'
+                            )}
+                        >
+                            <img
+                                src={image.src}
+                                alt={image.alt}
+                                className="w-full h-full object-cover"
+                            />
+                            {/* Overlay content */}
+                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                <div className="text-center text-white px-6 max-w-4xl">
+                                    <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                                        {image.title}
+                                    </h1>
+                                    <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
+                                        {image.description}
+                                    </p>
+                                    <div className="flex gap-3 justify-center">
+                                        <button className="border border-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition-colors">
+                                            Shop Wigs
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
+
+                {/* Desktop view - 3 images horizontally */}
+                <div className="hidden lg:block">
+                    {desktopImageGroups.map((imageGroup, groupIndex) => (
+                        <div
+                            key={groupIndex}
+                            className={cn(
+                                'absolute inset-0 transition-opacity duration-1000 ease-in-out',
+                                groupIndex === currentIndex ? 'opacity-100' : 'opacity-0'
+                            )}
+                        >
+                            <div className="flex h-full gap-4 px-8">
+                                {imageGroup.map((image, imageIndex) => (
+                                    <div key={imageIndex} className="flex-1 relative">
+                                        <img
+                                            src={image.src}
+                                            alt={image.alt}
+                                            className="w-full h-full object-contain"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                            {/* Overlay content - centered over the middle */}
+                            <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+                                <div className="text-center text-white px-6 max-w-4xl">
+                                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
+                                        {imageGroup[1]?.title || 'Wig Collection'}
+                                    </h1>
+                                    <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
+                                        {imageGroup[1]?.description || 'Discover our premium wig collection'}
+                                    </p>
+                                    <div className="flex gap-3 justify-center">
+                                        <button className="border border-white px-6 py-3 rounded-full font-semibold hover:bg-white hover:text-black transition-colors">
+                                            Shop Wigs
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             {/* Navigation arrows */}
@@ -93,7 +142,7 @@ export const Carousel = ({ images, className }: CarouselProps) => {
 
             {/* Pagination dots */}
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                {images.map((_, index) => (
+                {desktopImageGroups.map((_, index) => (
                     <button
                         key={index}
                         onClick={() => goToSlide(index)}
