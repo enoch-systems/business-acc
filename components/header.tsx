@@ -1,17 +1,17 @@
 'use client'
 import Link from 'next/link'
 import { Logo } from '@/components/logo'
-import { Menu, X, Home, ShoppingBag, Package, ShoppingCart, HelpCircle, User, Store, Settings, LogOut } from 'lucide-react'
+import { Menu, X, Home, ShoppingBag, Package, ShoppingCart, HelpCircle, User, Store, Settings, LogOut, ChevronDown, CreditCard, Brush, HousePlus, ScissorsLineDashed } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { cn } from '@/lib/utils'
 
 const menuItems = [
-    { name: 'Account', href: '/profile', icon: User, customIcon: '/admin.png', hasDropdown: true },
-    { name: 'Home', href: '/', icon: Home, customIcon: '/home.png' },
-    { name: 'Shop Wigs', href: '/shop-wigs', icon: ShoppingBag, customIcon: '/shopwigs.png' },
-    { name: 'Accessories', href: '/accessories', icon: Package, customIcon: '/access.png' },
-    { name: 'Check out', href: '/checkout', icon: ShoppingCart, customIcon: '/card.png' },
+    { name: 'My Account', href: '/profile', icon: User, customIcon: '/admin.png', hasDropdown: true },
+    { name: 'Home', href: '/', icon: HousePlus },
+    { name: 'Shop Wigs', href: '/shop-wigs', icon: ShoppingBag },
+    { name: 'Accessories', href: '/accessories', icon: ScissorsLineDashed },
+    { name: 'Check out', href: '/checkout', icon: CreditCard },
     { name: 'Help', href: '/help', icon: HelpCircle },
 ]
 
@@ -92,7 +92,7 @@ export const HeroHeader = () => {
                             </ul>
                         </div>
 
-                        <div className="bg-background in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none">
+                        <div className="bg-amber-900/40   in-data-[state=active]:block lg:in-data-[state=active]:flex mb-6 hidden w-full flex-wrap items-center justify-end space-y-8 rounded-3xl border-gray-500/20 p-6 shadow-2xl shadow-zinc-300/20 md:flex-nowrap lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0 lg:border-transparent lg:bg-transparent lg:p-0 lg:shadow-none">
                             <div className="lg:hidden">
                                 <ul className="space-y-4 text-base">
                                     {menuItems.map((item, index) => (
@@ -101,20 +101,21 @@ export const HeroHeader = () => {
                                                 <div>
                                                     <button
                                                         onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                                                        className="text-black hover:text-black flex items-center gap-3 duration-150 pb-2 border-b-2 border-gray-300 w-full justify-end">
+                                                        className="text-black hover:text-black flex items-center gap-3 duration-150 pb-2 border-b border-amber-100 w-full justify-end">
                                                         {item.customIcon ? (
-                                                            <img src={item.customIcon} alt={item.name} className="size-8 object-cover rounded-full border-2 border-gray-300" />
+                                                            <img src={item.customIcon} alt={item.name} className="size-8 object-cover rounded-full border-2 border-amber-100" />
                                                         ) : (
                                                             <item.icon className="size-5" />
                                                         )}
-                                                        <span>{item.name}</span>
+                                                        <span className="text-amber-100">{item.name}</span>
+                                                        <ChevronDown className="size-4 text-amber-100" />
                                                     </button>
                                                     {profileDropdownOpen && (
                                                         <div className="ml-auto mt-2 space-y-2 bg-white rounded-lg shadow-lg p-4 border w-48">
                                                             {profileDropdownItems.map((dropdownItem, dropdownIndex) => (
                                                                 <div key={dropdownIndex}>
                                                                     {dropdownItem.isHeader ? (
-                                                                        <div className="pb-2 border-b border-gray-200 mb-2">
+                                                                        <div className="pb-2 border-b border-amber-900 mb-2">
                                                                             <div className="font-semibold">{dropdownItem.name}</div>
                                                                             <div className="text-sm text-gray-500">{dropdownItem.email}</div>
                                                                         </div>
@@ -135,13 +136,13 @@ export const HeroHeader = () => {
                                             ) : (
                                                 <Link
                                                     href={item.href}
-                                                    className="text-black hover:text-black flex items-center gap-3 duration-150 pb-4 border-b-2 border-gray-300 last:border-0">
+                                                    className="text-white         hover:text-amber-400 flex     items-center gap-3 duration-150 pb-4 border-b-2 border-amber-900 last:border-0">
                                                     {item.customIcon ? (
                                                         <img src={item.customIcon} alt={item.name} className="size-5 object-contain" />
                                                     ) : (
-                                                        <item.icon className="size-5" />
+                                                        <item.icon className="size-5 text-amber-100" />
                                                     )}
-                                                    <span className="border-b border-gray-200">{item.name}</span>
+                                                    <span className="border-b border-gray-500/20">{item.name}</span>
                                                 </Link>
                                             )}
                                         </li>
@@ -171,7 +172,7 @@ export const HeroHeader = () => {
                                     size="sm"
                                     className={cn(isScrolled ? 'lg:inline-flex' : 'hidden')}>
                                     <Link href="#">
-                                        <span>Get Started</span>
+                                        <span>Go to Shop</span>
                                     </Link>
                                 </Button>
                             </div>
