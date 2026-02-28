@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
 import { HeroHeader } from './header'
 import Footer from '@/components/footer'
+import { useCart } from './cart-context'
 
 const featuredProducts = [
     {
@@ -412,8 +413,31 @@ const Shop = () => {
     const [selectedSort, setSelectedSort] = useState('Featured')
     const [selectedCategory, setSelectedCategory] = useState('All')
     const [currentPage, setCurrentPage] = useState(1)
+    const [addedToCart, setAddedToCart] = useState<Set<number>>(new Set())
+    const { addToCart } = useCart()
+    const handleAddToCart = (product: typeof featuredProducts[0]) => {
+        addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            originalPrice: product.originalPrice,
+            image: product.image,
+            badge: product.badge
+        })
+        
+        // Show success feedback
+        setAddedToCart(prev => new Set([...prev, product.id]))
+        
+        // Remove feedback after 1 second
+        setTimeout(() => {
+            setAddedToCart(prev => {
+                const newSet = new Set(prev)
+                newSet.delete(product.id)
+                return newSet
+            })
+        }, 1000)
+    }
     const productsPerPage = 10
-
     const sortOptions = ['Featured', 'Price: Low to High', 'Price: High to Low']
     const categories = ['All', 'Lace', 'Human Hair', 'Curly', 'Straight', 'Colored']
 
@@ -565,8 +589,15 @@ const Shop = () => {
                                             </div>
                                             
                                             {/* Add to Cart Button */}
-                                            <Button className="w-full bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300 text-xs sm:text-sm py-1.5 sm:py-2">
-                                                Add to Cart
+                                            <Button 
+                                                className={`w-full text-xs sm:text-sm py-1.5 sm:py-2 transition-colors ${
+                                                    addedToCart.has(product.id)
+                                                        ? 'bg-green-500 text-white hover:bg-green-600'
+                                                        : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300'
+                                                }`}
+                                                onClick={() => handleAddToCart(product)}
+                                            >
+                                                {addedToCart.has(product.id) ? 'Added!' : 'Add to Cart'}
                                             </Button>
                                         </div>
                                     </div>

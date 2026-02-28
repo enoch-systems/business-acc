@@ -5,6 +5,7 @@ import { Menu, X, Home, ShoppingBag, Package, ShoppingCart, HelpCircle, User, St
 import { Button } from '@/components/ui/button'
 import React from 'react'
 import { cn } from '@/lib/utils'
+import { useCart } from './cart-context'
 
 const menuItems = [
     { name: 'My Account', href: '/profile', icon: User, customIcon: '/admin.png', hasDropdown: true },
@@ -25,8 +26,9 @@ const profileDropdownItems = [
 
 export const HeroHeader = () => {
     const [menuState, setMenuState] = React.useState(false)
-    const [isScrolled, setIsScrolled] = React.useState(false)
     const [profileDropdownOpen, setProfileDropdownOpen] = React.useState(false)
+    const [isScrolled, setIsScrolled] = React.useState(false)
+    const { cartCount } = useCart()
 
     React.useEffect(() => {
         const handleScroll = () => {
@@ -59,14 +61,15 @@ export const HeroHeader = () => {
                                 <span className="text-lg font-semibold">Wigga</span>
                             </Link>
 
-                            <button
+                            <Link
+                                href="/checkout"
                                 aria-label="Shopping Cart"
                                 className="relative z-20 -m-2.5 -mr-20 block cursor-pointer p-2.5 lg:hidden">
                                 <img src="/shopping-bag.png" alt="Shopping Cart" className="size-6 object-contain" />
                                 <span className="absolute top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
-                                    3
+                                    {cartCount}
                                 </span>
-                            </button>
+                            </Link>
 
                             <button
                                 onClick={() => setMenuState(!menuState)}

@@ -1,10 +1,12 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Star, Heart, ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { AnimatedGroup } from '@/components/ui/animated-group'
+import { useCart } from './cart-context'
 
 const featuredProducts = [
     {
@@ -149,6 +151,32 @@ const transitionVariants = {
 }
 
 export const Featured = () => {
+    const { addToCart } = useCart()
+    const [addedToCart, setAddedToCart] = useState<Set<number>>(new Set())
+    
+    const handleAddToCart = (product: typeof featuredProducts[0]) => {
+        addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            originalPrice: product.originalPrice,
+            image: product.image,
+            badge: product.badge
+        })
+        
+        // Show success feedback
+        setAddedToCart(prev => new Set([...prev, product.id]))
+        
+        // Remove feedback after 1 second
+        setTimeout(() => {
+            setAddedToCart(prev => {
+                const newSet = new Set(prev)
+                newSet.delete(product.id)
+                return newSet
+            })
+        }, 1000)
+    }
+    
     return (
         <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white">
             <div className="max-w-7xl mx-auto">
@@ -168,7 +196,7 @@ export const Featured = () => {
                         {featuredProducts.map((product) => (
                             <div key={product.id} className="bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
                             {/* Product Image */}
-                            <div className="relative group overflow-hidden rounded-t-lg">
+                            <div className="relative overflow-hidden rounded-t-lg">
                                 <Image
                                     src={product.image}
                                     alt={product.name}
@@ -178,22 +206,11 @@ export const Featured = () => {
                                 />
                                 
                                 {/* Badge */}
-                                <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
-                                    {product.badge}
-                                </span>
-                                
-                                {/* Heart Icon */}
-                                <button className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm p-1.5 rounded-full shadow-md hover:bg-white transition-colors">
-                                    <Heart className="size-3 sm:size-4 text-gray-600 hover:text-red-500" />
-                                </button>
-                                
-                                {/* Quick Add Button */}
-                                <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <Button size="sm" className="w-full bg-gray-900 text-white hover:bg-gray-800 text-xs sm:text-sm py-1.5 sm:py-2">
-                                        <ShoppingCart className="size-3 sm:size-4 mr-1 sm:mr-2" />
-                                        Quick Add
-                                    </Button>
-                                </div>
+                                {product.id <= 4 && (
+                                    <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                                        {product.badge}
+                                    </span>
+                                )}
                             </div>
                             
                             {/* Product Info */}
@@ -221,8 +238,15 @@ export const Featured = () => {
                                 </div>
                                 
                                 {/* Add to Cart Button */}
-                                <Button className="w-full bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300 text-xs sm:text-sm py-1.5 sm:py-2">
-                                    Add to Cart
+                                <Button 
+                                    className={`w-full text-xs sm:text-sm py-1.5 sm:py-2 transition-colors ${
+                                        addedToCart.has(product.id)
+                                            ? 'bg-green-500 text-white hover:bg-green-600'
+                                            : 'bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-300'
+                                    }`}
+                                    onClick={() => handleAddToCart(product)}
+                                >
+                                    {addedToCart.has(product.id) ? 'Added!' : 'Add to Cart'}
                                 </Button>
                             </div>
                         </div>
@@ -233,9 +257,11 @@ export const Featured = () => {
                 {/* View All Button */}
                 <AnimatedGroup variants={transitionVariants}>
                     <div className="text-center mt-12">
-                        <Button variant="outline" className="border-gray-40 text-gray-90 hover:bg-gray-500 hover:text-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base">
-                            View All Products
-                        </Button>
+                        <Link href="/shop">
+                            <Button variant="outline" className="border-gray-40 text-gray-90 hover:bg-gray-500 hover:text-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base">
+                                View All Products
+                            </Button>
+                        </Link>
                     </div>
                 </AnimatedGroup>
             </div>
