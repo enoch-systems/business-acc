@@ -10,7 +10,7 @@ import { AnimatedGroup } from '@/components/ui/animated-group'
 import { Carousel } from '@/components/ui/carousel'
 import { HeroHeader } from './header'
 import { Featured } from './featured'
-import { Footer } from './footer'
+import Footer from '@/components/footer'
 
 const carouselImages = [
     {
@@ -65,6 +65,48 @@ const transitionVariants = {
     },
 }
 
+const carouselTransitionVariants = {
+    item: {
+        hidden: {
+            opacity: 0,
+            filter: 'blur(12px)',
+            y: 12,
+        },
+        visible: {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            transition: {
+                type: 'spring' as const,
+                bounce: 0.3,
+                duration: 1.5,
+                delay: 0.3,
+            },
+        },
+    },
+}
+
+const featuredTransitionVariants = {
+    item: {
+        hidden: {
+            opacity: 0,
+            filter: 'blur(12px)',
+            y: 12,
+        },
+        visible: {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            transition: {
+                type: 'spring' as const,
+                bounce: 0.3,
+                duration: 1.5,
+                delay: 0.6,
+            },
+        },
+    },
+}
+
 export default function HeroSection() {
     return (
         <>
@@ -108,7 +150,7 @@ export default function HeroSection() {
                             <Image
                                 src="https://ik.imagekit.io/lrigu76hy/tailark/night-background.jpg?updatedAt=1745733451120"
                                 alt="background"
-                                className="hidden size-full dark:block"
+                                className="hidden size-full"
                                 width="3276"
                                 height="4095"
                             />
@@ -122,13 +164,13 @@ export default function HeroSection() {
                         <div className="mx-auto max-w-7xl px-6">
                             <div className="text-center sm:mx-auto lg:mr-auto lg:mt-0">
                                 <AnimatedGroup variants={transitionVariants}>
-                                    <div className="hover:bg-background dark:hover:border-t-border bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-2 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950">
+                                    <div className="hover:bg-background bg-muted group mx-auto flex w-fit items-center gap-4 rounded-full border p-2 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300">
                                     <input
                                         type="text"
                                         placeholder="Search products...."
                                         className="text-foreground text-sm bg-transparent outline-none w-64 placeholder:text-muted-foreground"
                                     />
-                                    <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
+                                    <span className="block h-4 w-0.5 border-l bg-white"></span>
                                     <div className="bg-background group-hover:bg-muted size-6 overflow-hidden rounded-full duration-500 flex items-center justify-center">
                                         <Search className="m-auto size-3" />
                                     </div>
@@ -138,18 +180,20 @@ export default function HeroSection() {
                         </div>
 
                         {/* Carousel Section */}
-                        <div className="relative h-[600px] w-full">
-                            <Carousel images={carouselImages} className="h-full" />
-                        </div>
+                        <AnimatedGroup variants={carouselTransitionVariants}>
+                            <div className="relative h-[600px] w-full">
+                                <Carousel images={carouselImages} className="h-full" />
+                            </div>
+                        </AnimatedGroup>
                     </div>
                 </section>
                 
                 {/* Featured Products Section */}
                 <Featured />
+
+                {/* Page footer */}
+                <Footer />
             </main>
-            
-            {/* Footer Section */}
-            <Footer />
         </>
     )
 }

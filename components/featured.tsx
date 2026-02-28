@@ -4,6 +4,7 @@ import React from 'react'
 import Image from 'next/image'
 import { Star, Heart, ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { AnimatedGroup } from '@/components/ui/animated-group'
 
 const featuredProducts = [
     {
@@ -126,22 +127,46 @@ const StarRating = ({ rating }: { rating: number }) => {
     )
 }
 
+const transitionVariants = {
+    item: {
+        hidden: {
+            opacity: 0,
+            filter: 'blur(12px)',
+            y: 12,
+        },
+        visible: {
+            opacity: 1,
+            filter: 'blur(0px)',
+            y: 0,
+            transition: {
+                type: 'spring' as const,
+                bounce: 0.3,
+                duration: 1.5,
+                delay: 0.6,
+            },
+        },
+    },
+}
+
 export const Featured = () => {
     return (
         <section className="py-8 px-4 sm:px-6 lg:px-8 bg-white">
             <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="text-left mb-8">
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-normal text-gray-700 mb-2 ">
-                        Featured Products
-                    </h2>
-                   
-                </div>
+                <AnimatedGroup variants={transitionVariants}>
+                    <div className="text-left mb-8">
+                        <h2 className="text-xl sm:text-2xl md:text-3xl font-normal text-gray-700 mb-2 ">
+                            Featured Products
+                        </h2>
+                       
+                    </div>
+                </AnimatedGroup>
 
                 {/* Products Grid - 2 cols on mobile, 3 on tablet, 4 on desktop */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-                    {featuredProducts.map((product) => (
-                        <div key={product.id} className="bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
+                <AnimatedGroup variants={transitionVariants}>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+                        {featuredProducts.map((product) => (
+                            <div key={product.id} className="bg-white border border-gray-200 rounded-lg hover:shadow-lg transition-all duration-300">
                             {/* Product Image */}
                             <div className="relative group overflow-hidden rounded-t-lg">
                                 <Image
@@ -203,13 +228,16 @@ export const Featured = () => {
                         </div>
                     ))}
                 </div>
+                </AnimatedGroup>
                 
                 {/* View All Button */}
-                <div className="text-center mt-12">
-                    <Button variant="outline" className="border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base">
-                        View All Products
-                    </Button>
-                </div>
+                <AnimatedGroup variants={transitionVariants}>
+                    <div className="text-center mt-12">
+                        <Button variant="outline" className="border-gray-40 text-gray-90 hover:bg-gray-500 hover:text-white px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base">
+                            View All Products
+                        </Button>
+                    </div>
+                </AnimatedGroup>
             </div>
         </section>
     )
