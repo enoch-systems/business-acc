@@ -15,7 +15,7 @@ const StarRating = ({ rating }: { rating: number }) => {
             {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                     key={star}
-                    className={`size-5 ${
+                    className={`size-4 ${
                         star <= Math.floor(rating)
                             ? 'fill-yellow-400 text-yellow-400'
                             : 'text-gray-300'
@@ -369,11 +369,6 @@ export default function DynamicProductPage({ params }: { params: Promise<{ produ
                                                                 alt={relatedProduct.name}
                                                                 className="w-full h-48 object-cover transition-transform duration-300"
                                                             />
-                                                            {relatedProduct.badge && (
-                                                                <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
-                                                                    {relatedProduct.badge}
-                                                                </span>
-                                                            )}
                                                         </div>
                                                         
                                                         {/* Product Info */}

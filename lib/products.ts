@@ -21,22 +21,19 @@ export const products: Product[] = [
     ...Array.from({ length: 36 }, (_, index) => {
         const id = index + 1
         const wigNumber = id
-        const categories = ['Bob', 'Long', 'Curly', 'Straight', 'Layered', 'Short', 'Wavy', 'Blonde']
-        const category = categories[Math.floor(Math.random() * categories.length)]
-        const styles = ['Classic', 'Modern', 'Elegant', 'Trendy', 'Vintage', 'Bold', 'Natural', 'Luxury']
+        const styles = ['Classic Bob', 'Long Wavy', 'Pixie Cut', 'Layered Lob', 'Sleek Straight', 'Curly Afro', 'Side Swept', 'Messy Bun', 'Ponytail Extension', 'Braided Styles']
+        const categories = ['Short Hair', 'Long Hair', 'Curly Hair', 'Straight Hair', 'Wavy Hair']
         const style = styles[Math.floor(Math.random() * styles.length)]
-        const types = ['Cut', 'Style', 'Wig', 'Hair', 'Look', 'Design', 'Piece', 'Collection']
-        const type = types[Math.floor(Math.random() * types.length)]
-        const name = `${style} ${category} ${type}`
+        const category = categories[Math.floor(Math.random() * categories.length)]
+        const name = `${style} ${category}`
 
-        const prices = ['₦35,000', '₦38,000', '₦42,000', '₦45,000', '₦48,000', '₦52,000', '₦55,000', '₦58,000', '₦62,000', '₦65,000', '₦68,000', '₦71,000', '₦75,000', '₦82,000']
-        const priceIndex = Math.floor(Math.random() * prices.length)
-        const price = prices[priceIndex]
-        const originalPrice = prices[Math.min(priceIndex + 2, prices.length - 1)]
-
-        const ratings = [4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 4.9]
-        const rating = ratings[Math.floor(Math.random() * ratings.length)]
-        const reviews = Math.floor(Math.random() * 200) + 50
+        const basePrice = Math.floor(Math.random() * 50000) + 15000
+        const discount = Math.random() > 0.5 ? Math.floor(Math.random() * 0.3 * basePrice) : 0
+        const price = `₦${(basePrice - discount).toLocaleString()}`
+        const originalPrice = discount > 0 ? `₦${basePrice.toLocaleString()}` : price
+        
+        const rating = parseFloat((Math.random() * 2 + 3).toFixed(1))
+        const reviews = Math.floor(Math.random() * 500) + 50
 
         const colorPalettes = [
             ['Natural Black', 'Dark Brown', 'Chestnut Brown'],
@@ -47,8 +44,16 @@ export const products: Product[] = [
         ]
         const colors = colorPalettes[Math.floor(Math.random() * colorPalettes.length)]
 
-        const badges = ['Best Seller', 'New Arrival', 'Hot Deal', 'Premium', 'Trending', 'Sale', 'Popular', 'Luxury', 'Exclusive', 'Eco-Friendly']
-        const badge = Math.random() > 0.3 ? badges[Math.floor(Math.random() * badges.length)] : ''
+        // Set specific badges for first 4 products
+        let badge = ''
+        if (id === 1) badge = 'New Arrival'
+        else if (id === 2) badge = 'Special Offer'
+        else if (id === 3) badge = 'Top Selling'
+        else if (id === 4) badge = 'Hot Deals'
+        else {
+            const badges: string[] = []
+            badge = Math.random() > 0.3 ? badges[Math.floor(Math.random() * badges.length)] : ''
+        }
 
         return {
             id,
